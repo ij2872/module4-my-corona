@@ -8,7 +8,8 @@
   $ ->
     alertify.set('notifier','position', 'top-left')
     
-    response1 = problem1(SYMPTOMS_STR_1)
+    -# response1 = problem1(SYMPTOMS_STR_1)
+    response1 = problem1(SYMPTOMS_STR_2)
     $('#response').html(response1)
     
     problem2(SYMPTOMS_ARR_1)
@@ -16,20 +17,42 @@
     problem3()
 
   problem1 = (symptoms_string)->
-    console.log "PROBLEM1: STRING MANIPULATION"
-    # TODO
-    return "TODO"
-    
+    symptoms_array_raw = symptoms_string.split(":")[1].split(",")
+    symptoms_array = symptoms_array_raw.map((str) -> str.trim().toLowerCase())
+                        .filter((str) -> COVID_SYMPTOMS.includes(str))
+                        .join(";")
+    return symptoms_array
+  
+
   problem2 = (symptoms_arr)->
-    console.log "PROBLEM2: PROGRAMMATIC DOM"
-    # TODO
-    return
+    getClass = (symptom) -> if COVID_SYMPTOMS.includes(symptom) then "covid" else "" 
+    leftSelector = $("#problem-2  ol.left")
+    rightSelector = $("#problem-2 ol.right")
+
+    li = symptoms_arr.map((symptom) -> createLiString(symptom, getClass(symptom))).join("")
+    rightSelector.html(li)
+    leftSelector.closest(".column").remove()
     
   problem3 = ()->
-    API_KEY = "TODO" 
-    # TODO
-    return
+    API_KEY = "AIzaSyBwSklCc9otnO0WLGoB1qRsbu7_QeLBvD8" 
+    leftSelector = $("#problem-3  ol.left")
+    rightSelector = $("#problem-3 ol.right")
+    
+    $.get("/api/covid_locations", (coordRaw) -> 
+      coordinates = coordRaw.map((coord) -> coord.slice(1))
+                        .map((coord) -> coord.split(",").splice(0,2).join())
+
+      coordinates.forEach((coord) -> 
+        $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=\#{coord}&key=\#{API_KEY}", (json) -> 
+          formattedAddress = json.results[0]['formatted_address']
+          leftSelector.append(createLiString(coord))
+          rightSelector.append(createLiString(formattedAddress))
+        )
+      )
+    )
   
+  createLiString = (str, className="") ->
+    return "<li class=\"\#{className}\">\#{str}</li>"
   
 / HTML/CSS CODE - DO NOT MODIFY ANYTHING UNDER THIS LINE  
   
