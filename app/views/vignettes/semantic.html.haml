@@ -6,7 +6,50 @@
       .ui.segment.stacked.attached
         / MAIN FORM
         %form#assessment.ui.form
-          %p= BetterLorem.p(10, true)
+          %h3.ui.dividing.header Have you experienced any of the following symptoms?
+          .grouped.fields
+            .field
+              .ui.checkbox
+                %input{:type => "checkbox", :name => "symptoms", :tabindex => "0"}
+                %label Aches and Pains
+            .field
+              .ui.checkbox
+                %input{:type => "checkbox", :name => "symptoms", :tabindex => "0"}
+                %label Fever
+            .field
+              .ui.checkbox
+                %input{:type => "checkbox", :name => "symptoms", :tabindex => "0"}
+                %label Dry Cough
+            .field
+              .ui.checkbox
+                %input{:type => "checkbox", :name => "symptoms", :tabindex => "0"}
+                %label Fatigue
+          %h3.ui.dividing.header Exposure assesment
+          -# .groupd.fields
+          .field
+            %label Have you had contact with an individual that has tested positive for COVID-19?
+            .ui.selection.dropdown
+              %input{:type => "hidden", :name => "contact"}
+              %i.dropdown.icon
+              .default.text Fill out.
+              .menu
+                .item{:data_value => 1} item 1
+                .item{:data_value => 0} item 2
+          .field
+            %label Did you travel outside your state or country in the last 2-14 days?
+            .ui.selection.dropdown
+              %input{:type => "hidden", :name => "travel"}
+              %i.dropdown.icon
+              .default.text Fill out.
+              .menu
+                .item{:data_value => 1} item 1
+                .item{:data_value => 0} item 2
+          .field
+            %label{:type => "text"} If so, where?
+            %input
+          .ui.primary.button(type="submit") Submit
+                  
+
 
 / DO NOT MODIFY ANYTHING BELOW THESE LINES
 :coffeescript
